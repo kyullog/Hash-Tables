@@ -18,6 +18,7 @@ class DynamicArray:
 
         for i in range(self.count, index, -1):
             self.storage[i] = self.storage[i - 1]
+
         self.storage[index] = value
         self.count += 1
         return value
