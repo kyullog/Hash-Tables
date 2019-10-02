@@ -27,4 +27,15 @@ class DynamicArray:
         return value
 
     def resize(self):
-        pass
+        # double our capacity
+        self.capacity = self.capacity * 2
+
+        # make a new array that new size
+        new_array = [None] * self.capacity
+
+        # copy everything from the old array
+        for idx in range(self.count):
+            new_array[idx] = self.storage[idx]
+
+        # use this new array as our storage
+        self.storage = new_array
