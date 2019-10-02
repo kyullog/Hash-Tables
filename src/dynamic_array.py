@@ -6,7 +6,13 @@ class DynamicArray:
         self.count = 0
 
     def append(self, value):
-        pass
+        if self.count >= self.capacity:
+            #TODO go and resize
+            print("ERROR: already full")
+            return value
+            
+        self.storage[self.count] = value
+        self.count += 1
 
     def insert(self, index, value):
         pass
