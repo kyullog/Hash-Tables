@@ -52,12 +52,25 @@ class HashTable:
         Fill this in.
         '''
 
-        hash_key = abs(self._hash_mod(key))
+        hash_key = self._hash_mod(key)
+
         if self.capacity <= hash_key:
             while self.capacity < hash_key:
                 self.resize()
 
-        self.storage[hash_key] = LinkedPair(key, value)
+        node = self.storage[hash_key]
+
+        if node == None:
+            self.storage[hash_key] = LinkedPair(key, value)
+            return
+
+        while node:
+            if node.next is None:
+                node.next = LinkedPair(key, value)
+                return
+            node = node.next        
+
+        
 
     def remove(self, key):
         '''
@@ -77,7 +90,25 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        hash_key = self._hash_mod(key)
+
+        node = self.storage[hash_key]
+        # if node is None:
+        #     return None
+        # if node.key == key:
+        #     return node.value
+        # elif node.next is None:
+        #     return None
+        # else:
+        #     self.retrieve(node.next)
+        while node:
+            if node.key == key:
+                return node.value
+            elif node.next == None:
+                return None
+            else:
+                node = node.next
+        return None
 
     def resize(self):
         '''
@@ -89,8 +120,8 @@ class HashTable:
         old_storage = self.storage
         self.storage = [None] * self.capacity * 2
 
-        for i in range(self.capacity):
-            if i:
+        for i in range(0, self.capacity):
+            if old_storage[i]:
                 self.storage[i] = old_storage[i]
 
         self.capacity = self.capacity * 2
