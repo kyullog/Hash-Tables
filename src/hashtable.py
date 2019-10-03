@@ -1,21 +1,24 @@
 # '''
 # Linked List hash table key/value pair
 # '''
+
+
 class LinkedPair:
     def __init__(self, key, value):
         self.key = key
         self.value = value
         self.next = None
 
+
 class HashTable:
     '''
     A hash table that with `capacity` buckets
     that accepts string keys
     '''
+
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
-
 
     def _hash(self, key):
         '''
@@ -25,7 +28,6 @@ class HashTable:
         '''
         return hash(key)
 
-
     def _hash_djb2(self, key):
         '''
         Hash an arbitrary key using DJB2 hash
@@ -34,14 +36,12 @@ class HashTable:
         '''
         pass
 
-
     def _hash_mod(self, key):
         '''
         Take an arbitrary key and return a valid integer index
         within the storage capacity of the hash table.
         '''
         return self._hash(key) % self.capacity
-
 
     def insert(self, key, value):
         '''
@@ -51,9 +51,13 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
 
+        hash_key = abs(self._hash_mod(key))
+        if self.capacity <= hash_key:
+            while self.capacity < hash_key:
+                self.resize()
 
+        self.storage[hash_key] = LinkedPair(key, value)
 
     def remove(self, key):
         '''
@@ -65,7 +69,6 @@ class HashTable:
         '''
         pass
 
-
     def retrieve(self, key):
         '''
         Retrieve the value stored with the given key.
@@ -76,7 +79,6 @@ class HashTable:
         '''
         pass
 
-
     def resize(self):
         '''
         Doubles the capacity of the hash table and
@@ -84,8 +86,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        old_storage = self.storage
+        self.storage = [None] * self.capacity * 2
 
+        for i in range(self.capacity):
+            if i:
+                self.storage[i] = old_storage[i]
+
+        self.capacity = self.capacity * 2
 
 
 if __name__ == "__main__":
