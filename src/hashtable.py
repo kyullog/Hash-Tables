@@ -99,18 +99,18 @@ class HashTable:
         '''
         hash_key = self._hash_mod(key)
         node = self.storage[hash_key]
-        next_node = node.next
-        if node is None:
-            return "Key not found"
+        
+        while node:
+            next_node = node.next
 
-        while node.next:
-            if next_node.key == key:
-                node.next = next_node.next
-                next_node.next = None
+            if node.key == key and next_node is None:
+                self.storage[hash_key] = None
+                return
+            elif next_node.key == key:
+                node.next, next_node.next = next_node.next, None
                 return
             else:
-                node = next_node
-                next_node = node.next
+                node = node.next
 
         return "Key not found"
 
@@ -125,19 +125,13 @@ class HashTable:
         hash_key = self._hash_mod(key)
 
         node = self.storage[hash_key]
-        # if node is None:
-        #     return None
-        # if node.key == key:
-        #     return node.value
-        # elif node.next is None:
-        #     return None
-        # else:
-        #     self.retrieve(node.next)
+
         while node:
             if node.key == key:
                 return node.value
             else:
                 node = node.next
+
         return None
 
     def resize(self):
