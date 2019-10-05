@@ -51,8 +51,8 @@ class HashTable:
 
         Fill this in.
         '''
-        node = LinkedPair(key, value) #create node to insert
-        hash_key = self._hash_mod(key)  
+        node = LinkedPair(key, value)  # create node to insert
+        hash_key = self._hash_mod(key)
         bucket = self.storage[hash_key]
 
         while bucket:
@@ -64,7 +64,7 @@ class HashTable:
                 return
             else:
                 bucket = bucket.next
-        
+
         self.storage[hash_key] = node
         # check keys to update value
 
@@ -99,7 +99,7 @@ class HashTable:
         '''
         hash_key = self._hash_mod(key)
         node = self.storage[hash_key]
-        
+
         while node:
             next_node = node.next
 
@@ -123,15 +123,16 @@ class HashTable:
         Fill this in.
         '''
         hash_key = self._hash_mod(key)
+        try:
+            node = self.storage[hash_key]
 
-        node = self.storage[hash_key]
-
-        while node:
-            if node.key == key:
-                return node.value
-            else:
-                node = node.next
-
+            while node:
+                if node.key == key:
+                    return node.value
+                else:
+                    node = node.next
+        except IndexError:
+            pass
         return None
 
     def resize(self):
@@ -142,13 +143,13 @@ class HashTable:
         Fill this in.
         '''
         old_storage = self.storage
-        self.storage = [None] * self.capacity * 2
+        self.capacity *= 2
+        self.storage = [None] * self.capacity
 
-        for i in range(0, self.capacity):
-            if old_storage[i]:
-                self.storage[i] = old_storage[i]
-
-        self.capacity = self.capacity * 2
+        for node in old_storage:
+            while node:
+                self.insert(node.key, node.value)
+                node = node.next
 
 
 if __name__ == "__main__":
