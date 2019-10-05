@@ -52,25 +52,28 @@ class HashTable:
         Fill this in.
         '''
 
+        # check keys to update value
+
         hash_key = self._hash_mod(key)
 
-        if self.capacity <= hash_key:
-            while self.capacity < hash_key:
-                self.resize()
+        # if self.capacity <= hash_key:
+        #     while self.capacity < hash_key:
+        #         self.resize()
+        node = LinkedPair(key, value)
+        index = self.storage[hash_key]
 
-        node = self.storage[hash_key]
-
-        if node == None:
-            self.storage[hash_key] = LinkedPair(key, value)
+        if index == None:
+            self.storage[hash_key] = node
             return
 
-        while node:
-            if node.next is None:
-                node.next = LinkedPair(key, value)
+        while index.next:
+            if index.key == key:
+                index.value = value
                 return
-            node = node.next        
+            else:
+                index = index.next
 
-        
+        index.next = node
 
     def remove(self, key):
         '''
