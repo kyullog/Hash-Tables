@@ -51,29 +51,43 @@ class HashTable:
 
         Fill this in.
         '''
+        node = LinkedPair(key, value) #create node to insert
+        hash_key = self._hash_mod(key)  
+        bucket = self.storage[hash_key]
 
-        # check keys to update value
-
-        hash_key = self._hash_mod(key)
-
-        # if self.capacity <= hash_key:
-        #     while self.capacity < hash_key:
-        #         self.resize()
-        node = LinkedPair(key, value)
-        index = self.storage[hash_key]
-
-        if index == None:
-            self.storage[hash_key] = node
-            return
-
-        while index.next:
-            if index.key == key:
-                index.value = value
+        while bucket:
+            if bucket.key == key:
+                bucket.value = value
+                return
+            elif bucket.next == None:
+                bucket.next = node
                 return
             else:
-                index = index.next
+                bucket = bucket.next
+        
+        self.storage[hash_key] = node
+        # check keys to update value
 
-        index.next = node
+        # hash_key = self._hash_mod(key)
+
+        # # if self.capacity <= hash_key:
+        # #     while self.capacity < hash_key:
+        # #         self.resize()
+        # node = LinkedPair(key, value)
+        # index = self.storage[hash_key]
+
+        # if index == None:
+        #     self.storage[hash_key] = node
+        #     return
+
+        # while index.next:
+        #     if index.key == key:
+        #         index.value = value
+        #         return
+        #     else:
+        #         index = index.next
+
+        # index.next = node
 
     def remove(self, key):
         '''
@@ -83,7 +97,22 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        hash_key = self._hash_mod(key)
+        node = self.storage[hash_key]
+        next_node = node.next
+        if node is None:
+            return "Key not found"
+
+        while node.next:
+            if next_node.key == key:
+                node.next = next_node.next
+                next_node.next = None
+                return
+            else:
+                node = next_node
+                next_node = node.next
+
+        return "Key not found"
 
     def retrieve(self, key):
         '''
@@ -107,8 +136,6 @@ class HashTable:
         while node:
             if node.key == key:
                 return node.value
-            elif node.next == None:
-                return None
             else:
                 node = node.next
         return None
